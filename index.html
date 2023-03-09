@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>
+            Feel visually
+        </title>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+    </head>
+
+    <body>
+        <script>
+
+            function Mover() {
+            this.location = createVector(random(width), random(height));
+            this.velocity = createVector(random(-2, 2), random(-2, 2));
+            this.acceleration = createVector(-0.001, 0.01);
+            this.topspeed = 25;
+
+            this.update = function() {
+                let mouse = createVector(mouseX, mouseY);
+                let dir = p5.Vector.sub(mouse, this.location);
+                dir.normalize();
+                dir.mult(0.5);
+                this.acceleration = dir;
+
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(this.topspeed);
+
+                this.location.add(this.velocity);
+            };
+
+            this.display = function() {
+                stroke(193, 200, 210);
+                strokeWeight(1);
+                fill(1000);
+                ellipse(this.location.x, this.location.y, 8, 8);
+            };
+            
+
+            
+
+            this.checkEdges = function() {
+                if (this.location.x > width) {
+                this.location.x = 0;
+                } else if (this.location.x < 0) {
+                this.location.x = width;
+                }
+
+                if (this.location.y > height) {
+                this.location.y = 0;
+                } else if (this.location.y < 0) {
+                this.location.y = height;
+                }
+            };  
+
+        }
+
+    
+
+            let mover;
+            let movers = [];
+
+            function setup() {
+
+                bg = loadImage('assets/bagr.png');
+                createCanvas(windowWidth, windowHeight);
+
+                mover = new Mover();
+                for (let i = 0; i < 1600; i++) {
+                    movers[i] = new Mover();
+                }
+            
+            }
+
+            function draw() {
+                background(bg);
+                mover.update();
+                mover.checkEdges();
+                //mover.display();
+
+                for (let i = 0; i < movers.length; i++) {
+                    movers[i].update();
+                    //movers[i].checkEdges();
+                    movers[i].display();
+                }
+            }
+
+
+
+        </script>
+    </body>
+</html>
